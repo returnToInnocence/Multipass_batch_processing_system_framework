@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 使用Bootstrap flatly主题 -->
+    
+    <title>Table Editor</title>
+</head>
+<!-- 检验是否有本地存储 -->
+
+<!-- <body onload="checkEdits()"> -->
+<body>
+    <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
+    <div class="container">
+        <div class="mt-5 container d-flex justify-content-between align-items-cente">
+            <button class="btn btn-warning" onclick="edit(this);">Enable Edit</button>
+            <button class="btn btn-info" onclick="addRow();">Add Row</button>
+        </div>
+        <div class="container mt-4" id="edit">
+            <div class="display-4 text-center">
+                <h1 id="edit">Table Editor</h1>
+            </div>
+            <table class="table table-striped mt-5">
+                <!-- 表格只有四列 -->
+                <thead class="table-primary">
+                    <tr>
+                        <th>Column</th>
+                        <th>Column</th>
+                        <th>Column</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function showAlert(message, className) {
+            const div = document.createElement('div');
+            div.className = `mt-2 alert alert-${className}`;
+            div.appendChild(document.createTextNode(message));
+            const container = document.querySelector('.container');
+            const form = document.querySelector('#edit');
+            container.insertBefore(div, form);
+            // Vanish in 3 seconds
+            setTimeout(() => document.querySelector('.alert').remove(), 3000);
+        }
+
+        function edit(button) {
+            const x = document.getElementById("edit");
+            if (x.contentEditable == "true") {
+                x.contentEditable = "false";
+                localStorage.table = x.innerHTML;
+                showAlert("Edits saved!", 'success');
+                button.innerHTML = "Enable Edit";
+            } else {
+                x.contentEditable = "true";
+                button.innerHTML = "Save";
+            }
+        }
+
+        function addRow() {
+            const list = document.getElementById("rows");
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td></td><td></td><td></td>
+            <td><button class="btn btn-danger btn-sm" οnclick="deleteRow(this);">X</button></td>
+            `;
+            list.appendChild(row);
+        }
+
+        function deleteRow(button) {
+            button.parentElement.parentElement.remove();
+        }
+
+        function checkEdits() {
+            //find out if the user has previously saved edits
+            if (localStorage.table != null) {
+                document.getElementById("edit").innerHTML = localStorage.table;
+                console.log(localStorage.table)
+            }
+        }
+
+    </script>
+</body>
+
+</html>
